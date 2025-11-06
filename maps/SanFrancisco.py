@@ -1,58 +1,122 @@
-from metro_mapper.elements import create_map, line
+from metro_mapper.elements import create_map, lines
 
-gap=10
-
-styledata={
-    'background_color':'#000000',
-    'grid_color':'#444444',
-    'gap': gap,
-}
+fg=10
+hg=fg/2**0.5
+qg=fg*(2**0.5-1)
 
 mapdata={
-    'background': {
-        'width': 800,
-        'height': 800,
-        'major': 100,
-        'minor': 10
+    'style':{
+        'grid':{
+            'major':100,
+            'minor':10,
+            'color':'#444444'
+        },
+        'background': {
+            'width':800,
+            'height':1000,
+            'color':'#000000',
+        },
+        'fg':fg,
+        'center':(500,300),
     },
-    'testline':{
-        'color':'#FF0000',
-        'width':4,
-        'points':[
-            (100,100,10),
-            (200,100,10),
-            (200,200,10),
-            (300,200,10),
-            (300,100,10)
-        ],
-        'stops':[
-            (150,100),
-            (200,150),
-            (300,170)
-        ]
-    },
-    'testline2':{
-        'color':'#00FF00',
-        'width':4,
-        'points':[
-            (100,100-gap,10),
-            (200+gap,100-gap,10+gap),
-            (200+gap,170,10),
-            (400,170,10)
-        ],
-        'stops':[
-            (150,100-gap),
-            (200+gap,150),
-            (300+gap,170)
-        ]
+    'lines':{
+        'Bart':{
+            'color':'#777777',
+            'width':4,
+            'points':[
+                (150+hg,-150+hg,10),
+                (-100,100+2*hg,10),
+                (-100,400,10)
+            ],
+            'stops':[
+                (90+hg,-90+hg),
+                (50+hg,-50+hg),
+                (0+hg,0+hg)
+            ]
+        },
+        'M Line':{
+            'color':'#00FF00',
+            'width':4,
+            'points':[
+                (100,100,10),
+                (150,50,10),
+                (150,-50,10),
+                (100,-100,10),
+                (-200,200,10)
+            ],
+            'stops':[
+                (100,100),
+                (140,60),
+                (150,0),
+                (140,-60),
+                (90,-90),
+                (50,-50),
+                (0,0)
+            ]
+        },
+        'F Line':{
+            'color':'#FFFF00',
+            'width':4,
+            'points':[
+                (100+hg,100+hg,20),
+                (150+fg,50+qg,10),
+                (150+fg,-50-qg,10),
+                (-40+2*hg,-240,10),
+                (-80,-240,10),
+                (-80,-220,10),
+                (-20+2*hg,-220,10),
+                (2*hg,-200,10),
+            ],
+            'stops':[
+                (100+hg,100+hg),
+                (140+hg,60+hg),
+                (150+fg,0),
+                (140+hg,-60-hg),
+                (100+hg,-100-hg),
+                (-20+hg,-220-hg),
+                (-20,-220), 
+            ]
+        },
+        'C Line':{
+            'color':'#FF0000',
+            'width':4,
+            'points':[
+                (-20,-220+fg,10),
+                (-20,-20,10),
+                (150,150,10),
+                (150,400,10)
+            ],
+            'stops':[
+                (-20,-220+fg),
+                (-20,-100),
+                (0-hg,0-hg),
+                (40,40),
+                (80,80),
+                (100+2*hg,100+2*hg)
+            ]
+        },
+        'bluebus':{
+            'color':'#7777FF',
+            'width':2,
+            'points':[
+                (150,50,10),
+                (150,150,10),
+                (400,150,10)
+            ],
+            'stops':[
+                (150,50),
+                (150,100+fg),
+                (200+2*fg,150),
+                (350,150)
+            ]
+        },
     },
 }
 
-drawing=create_map(mapdata, styledata, 'outputs/SanFrancisco_map.svg', grid=True)
+drawing=create_map(mapdata, 'outputs/SanFrancisco_map.svg', grid=True)
 linegroup=drawing.g(id='lines')
 stopgroup=drawing.g(id='stops')
-line(mapdata['testline'], styledata, linegroup, stopgroup)
-line(mapdata['testline2'], styledata, linegroup, stopgroup)
+lines(mapdata, linegroup, stopgroup)
 drawing.add(linegroup)
 drawing.add(stopgroup)
 drawing.save()
